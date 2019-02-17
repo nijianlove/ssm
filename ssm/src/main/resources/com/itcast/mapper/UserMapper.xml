@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itcast.mapper.UserMapper">
+
+    <select id="login" resultType="user" parameterType="user">
+        SELECT  *  FROM users WHERE username=#{username} AND password=#{password}
+    </select>
+
+    <select id="findAll" resultType="user" parameterType="pageBean">
+        SELECT  *  FROM users
+        <where>
+            <if test="user.name!=null and user.name.length>0">
+                 name LIKE "%"#{user.name}"%"
+            </if>
+            <if test="user.address!=null and user.address.length>0">
+                AND address LIKE "%"#{user.address}"%"
+            </if>
+            <if test="user.email!=null and user.email.length>0">
+                AND email LIKE "%"#{user.email}"%"
+            </if>
+        </where>
+        limit #{startPage},#{rows}
+    </select>
+
+    <select id="findCounts" resultType="int" parameterType="pageBean">
+        SELECT count(*) FROM users
+        <where>
+            <if test="user.name!=null and user.name.length>0">
+                name LIKE "%"#{user.name}"%"
+            </if>
+            <if test="user.address!=null and user.address.length>0">
+                AND address LIKE "%"#{user.address}"%"
+            </if>
+            <if test="user.email!=null and user.email.length>0">
+                AND email LIKE "%"#{user.email}"%"
+            </if>
+        </where>
+    </select>
+
+    <insert id="saveUser" parameterType="user">
+        insert into users(name,gender,age,address,pic,username,password,qq,email)values(#{name},#{gender},#{age},#{address},#{pic},#{username},#{password},#{qq},#{email})
+    </insert>
+
+    <select id="findById" parameterType="int" resultType="user">
+        SELECT  *  FROM users WHERE id=#{id}
+    </select>
+
+    <update id="updateUser" parameterType="user">
+        UPDATE users SET gender=#{gender},age=#{age},address=#{address},pic=#{pic},username=#{username},password=#{password},qq=#{qq},email=#{email} WHERE id=#{id}
+    </update>
+
+    <delete id="deleteById" parameterType="list">
+        DELETE FROM users WHERE id=#{id}
+    </delete>
+
+</mapper>
